@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 
 export async function registerUser(req, res) {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const { email, password, skills = [] } = req.body;
     if (!email || !password)
       return res.status(400).json({
