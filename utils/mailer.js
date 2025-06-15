@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
     from:"My TICKETING SYSTEM",
     to,
     subject,
-    message
+    text:message
   });
 
   console.log("Message sent:", info.messageId);

@@ -65,11 +65,11 @@ export async function login(req, res) {
     });
   }
 
-  const passwordMatch = bcrpyt.compareSync(password, user.password);
+  const passwordMatch = bcrypt.compareSync(password, user.password);
   if (passwordMatch) {
     const token = jwt.sign(
-      { id: user_id, role: user.role },
-      process.env.SECRET_KEY,
+      { id: user._id, role: user.role },
+      process.env.JWT_TOKEN,
       {
         expiresIn: "30d",
       }
@@ -90,7 +90,7 @@ export const logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     if (!token) return res.status(401).json({ error: "Unauthorzed" });
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
       if (err) return res.status(401).json({ error: "Unauthorized" });
     });
     res.json({ message: "Logout successfully" });

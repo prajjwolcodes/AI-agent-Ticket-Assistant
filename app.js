@@ -7,7 +7,7 @@ import authRoutes from "./routes/authRoutes.js"
 import ticketRoutes from "./routes/ticketRoutes.js"
 import { serve } from "inngest/express"
 import { inngest } from "./inngest/client.js"
-import { userSignup } from "./inngest/functions/onSignup.js"
+import { onSignup } from "./inngest/functions/onSignup.js"
 import { onTicketCreation } from "./inngest/functions/onTicketCreation.js"
 
 
@@ -31,7 +31,7 @@ app.use("/tickets",ticketRoutes)
 app.use("/api/inngest",
   serve({
     client: inngest,
-    functions: [userSignup, onTicketCreation], // ✅ must include onSignup
+    functions: [onSignup, onTicketCreation], // ✅ must include onSignup
   })
 );
 
