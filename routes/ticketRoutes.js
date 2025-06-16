@@ -4,7 +4,7 @@ import { createTicket, getTicket, getTickets } from "../controller/ticketContoll
 
 const router = express.Router()
 
-router.route("/").post(authMiddleware,createTicket).get(authMiddleware,getTickets)
+router.route("/").get(authMiddleware,getTickets).post(authMiddleware,createTicket)
 router.route("/:id").get(authMiddleware,getTicket)
 export default router 
 

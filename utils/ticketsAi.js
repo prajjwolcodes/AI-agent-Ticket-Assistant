@@ -3,35 +3,52 @@ import { createAgent, gemini } from "@inngest/agent-kit";
 export async function analyzeTickets(ticket) {
   const ticketingAgent = createAgent({
     name: "Ticketing Triage System",
-    system: `
-You are an AI assistant in a ticket triage system. A customer has submitted a support ticket with a title and description. Your task is to analyze the issue and return the following:
+   system: `You are an expert AI assistant that processes technical support tickets. 
 
-1. skillsRequired: A list of relevant technical or soft skills (in array format) that are likely needed to resolve the issue.
-2. lookupSummary: A short summary (2–3 sentences) of what a support engineer might need to research or look up to solve this.
-3. helpfulNotes: A few helpful tips, context, or things to be aware of while resolving the ticket.
-`,
+Your job is to:
+1. Summarize the issue.
+2. Estimate its priority.
+3. Provide helpful notes and resource links for human moderators.
+4. List relevant technical skills required.
+
+IMPORTANT:
+- Respond with *only* valid raw JSON.
+- Do NOT include markdown, code fences, comments, or any extra formatting.
+- The format must be a raw JSON object.
+
+Repeat: Do not wrap your output in markdown or code fences.`,
     model: gemini({
       model: "gemini-1.5-flash-8b",
       apiKey: process.env.GEMINI_API,
-      defaultParameters: {
-        max_tokens: 1000,
-      },
     }),
   });
 
-  const response = await ticketingAgent.run(`
-// Only return structured JSON with the following format:
+  const response = await ticketingAgent.run(`You are a ticket triage agent. Only return a strict JSON object with no extra text, headers, or markdown.
+        
+Analyze the following support ticket and provide a JSON object with:
 
-// {
-//   "skills": ["skill1", "skill2", ...],
-//   "summary": "A concise summary...",
-//   "helpfulNotes": "Brief useful notes for the engineer..."
-// }
+- summary: A short 1-2 sentence summary of the issue.
+- priority: One of "low", "medium", or "high".
+- helpfulNotes: A detailed technical explanation that a moderator can use to solve this issue. Include useful external links or resources if possible.
+- relatedSkills: An array of relevant skills required to solve the issue (e.g., ["React", "MongoDB"]).
 
-// Here is the ticket:
+Respond ONLY in this JSON format and do not include any other text or markdown in the answer:
 
-// Title: {${ticket.title}}
-// Description: {${ticket.description}}`)
+{
+"summary": "Short summary of the ticket",
+"priority": "high",
+"helpfulNotes": "Here are useful tips...",
+"relatedSkills": ["React", "Node.js"]
+}
+
+---
+
+Ticket information:
+
+- Title: ${ticket.title}
+- Description: ${ticket.description}`)// console.log(ticket,response,"FROM ANALYZE TICKET FUNCTION");
+
+return response ? response : null;
 
 
 }

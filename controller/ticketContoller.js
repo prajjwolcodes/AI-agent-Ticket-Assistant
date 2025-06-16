@@ -11,11 +11,11 @@ export const createTicket = async (req, res) => {
     const ticket = await Ticket.create({
       title,
       description,
-      createdBy: req.user._id.toString(),
+      createdBy: req.user._id,
     });
     const ticketAiDesc = await inngest.send({
       name: "ticket/creation",
-      data: { ticketId: ticket._id.toString() },
+      data: { ticketId: ticket._id },
     });
 
     return res.status(201).json({
