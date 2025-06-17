@@ -44,7 +44,6 @@ export const onTicketCreation = inngest.createFunction(
         }
         
         aiResponse = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
-        console.log("Parsed AI Response:", aiResponse);
       } catch (parseError) {
         console.error("Failed to parse AI response:", parseError);
         console.error("Raw AI response:", aiResponseRaw);
@@ -59,7 +58,7 @@ export const onTicketCreation = inngest.createFunction(
               : aiResponse.priority.toLowerCase(),
             helpfulNotes: aiResponse.helpfulNotes || "",
             summary: aiResponse.summary || "", // Add summary field
-            status: "IN_PROGRESS",
+            status: "AI-PROCESSED",
             relatedSkills: aiResponse.relatedSkills || [],
           };
 
@@ -69,7 +68,6 @@ export const onTicketCreation = inngest.createFunction(
             { new: true } // Return the updated document
           );
           
-          console.log(response, "RESPONSE FROM AI PROCESSING");
           return aiResponse.relatedSkills || [];
         }
         return [];
