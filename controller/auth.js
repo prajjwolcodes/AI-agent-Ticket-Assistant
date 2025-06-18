@@ -100,7 +100,7 @@ export const logout = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-  const { role, skills = [], email } = req.body;
+  const { role, skills, email } = req.body;
   if (req.user.role !== "admin")
     return res.status(500).json({ error: "Forbidden - No admin" });
 
@@ -109,7 +109,7 @@ export const updateUser = async (req, res) => {
     if(!user)   return res.status(404).json({ error: "No User found" });
   
     const updatedUser = await User.updateOne({email},{
-      role, email , skills: skills.length ? skills : user.skills
+      role, skills: skills.length ? skills : user.skills
     })
   
     return res.status(200).json({
@@ -126,7 +126,7 @@ export const getUsers = async (req, res) => {
    return res.status(500).json({ error: "Forbidden - No admin" });
 
    try {
-    const users = await User.find(email)
+    const users = await User.find({},{password:0}).sort({createdAt:-1});
   return  res.status(200).json({
        message: "All Users fetched",
       users

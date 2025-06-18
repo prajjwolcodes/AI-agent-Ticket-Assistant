@@ -1,5 +1,5 @@
 import express from "express"
-import { getUsers, login, logout, registerUser } from "../controller/auth.js"
+import { getUsers, login, logout, registerUser, updateUser } from "../controller/auth.js"
 import { authMiddleware } from "../middleware/authMiddleware.js"
 
 const router = express.Router()
@@ -9,8 +9,8 @@ router.route("/login").post(login)
 router.route("/logout").post(logout)
 
 
-router.route("/updateuser").post(authMiddleware, logout)
-router.route("/getusers").post(authMiddleware,getUsers)
+router.route("/updateuser").patch(authMiddleware, updateUser)
+router.route("/getusers").get(authMiddleware,getUsers)
 
 
 

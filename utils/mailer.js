@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer"
 
 
-export async function sendMail(to,message,subject){
+export async function sendMail(to,subject,message){
 const transporter = nodemailer.createTransport({
   host: process.env.TEMP_MAIL_HOST,
   port: process.env.TEMP_MAIL_PORT,

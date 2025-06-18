@@ -96,7 +96,7 @@ export const getTicket = async (req, res) => {
 };
 
 export const updateTicket = async (req, res) => {
-  const {solution} = req.body;
+  const {solution,status} = req.body;
   const { id } = req.params;
 
   try {
@@ -105,16 +105,16 @@ export const updateTicket = async (req, res) => {
         message: "You are not authorized to update this ticket",
       });
     }
-    if (!solution || !id) {
+    if (!id) {
       return res.status(400).json({
-        message: "Provide all the data",
+        message: "No ticket selected",
       });
     }
     const ticket = await Ticket.findByIdAndUpdate(
       id,
       {
-        status: "SOLVED",
-        solution,
+        status: status ? status : "SOLVED",
+        solution: solution ? solution : "",
       },
       { new: true }
     );
